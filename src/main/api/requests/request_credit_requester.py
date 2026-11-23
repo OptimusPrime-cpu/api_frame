@@ -1,0 +1,20 @@
+from src.main.api.requests.requester import Requester
+from src.main.api.models.request_credit_request import RequestCreditRequest
+from src.main.api.models.request_credit_response import RequestCreditResponse
+import requests
+
+
+class RequestCreditRequester(Requester):
+    def post(self, request_credit_request: RequestCreditRequest) -> RequestCreditResponse:
+        url = f"{self.base_url}/credit/request"
+        response = requests.post(
+            url=url,
+            json=request_credit_request.model_dump(),
+            headers=self.headers,
+        )
+        self.response_spec(response)
+
+        if not response.ok:
+            return response.json()
+        return RequestCreditResponse(**response.json())
+
